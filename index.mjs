@@ -13,6 +13,7 @@ const blobServiceClient = new BlobServiceClient(
 
 const containerName = "testcontainer";
 const blobName = "hello.json";
+const content = JSON.stringify({foo: 'bar', baz: 42})
 
 async function main() {
     const containerClient = blobServiceClient.getContainerClient(containerName);
@@ -21,7 +22,7 @@ async function main() {
     const blockBlobClient = containerClient.getBlockBlobClient(blobName);
     const blobExists = await blockBlobClient.exists();
     if(!blobExists) {
-      const uploadBlobResponse = await blockBlobClient.upload(JSON.stringify({foo: 'bar', baz: 42}), content.length);
+      const uploadBlobResponse = await blockBlobClient.upload(content, content.length);
       console.log(`Upload block blob ${blobName} successfully`, uploadBlobResponse.requestId);
     } else {
       console.log("Blob already exists")
