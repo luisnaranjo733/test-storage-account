@@ -4,16 +4,29 @@ import { BlobServiceClient} from "@azure/storage-blob"
 const account = "salppcdevtede2cz6plihq";
 const defaultAzureCredential = new DefaultAzureCredential();
 
+// https://salppcdevtede2cz6plihq.blob.core.windows.net
+
 const blobServiceClient = new BlobServiceClient(
   `https://${account}.blob.core.windows.net`,
   defaultAzureCredential
 );
 
 const containerName = "testcontainer";
-const blobName = "package.json";
+const blobName = "hello.json";
 
 async function main() {
     const containerClient = blobServiceClient.getContainerClient(containerName);
+    await containerClient.createIfNotExists();
+
+    const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+    const blobExists = await blockBlobClient.exists();
+    if(!blobExists) {
+      const uploadBlobResponse = await blockBlobClient.upload(JSON.stringify({foo: 'bar', baz: 42}), content.length);
+      console.log(`Upload block blob ${blobName} successfully`, uploadBlobResponse.requestId);
+    } else {
+      console.log("Blob already exists")
+    }
+
     const blobClient = containerClient.getBlobClient(blobName);
   
     // Get blob content from position 0 to the end
