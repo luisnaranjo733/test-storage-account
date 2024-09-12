@@ -26,7 +26,7 @@ async function main() {
     const blobExists = await blockBlobClient.exists();
     if(!blobExists) {
       const uploadBlobResponse = await blockBlobClient.upload(sampleFpsData.content, sampleFpsData.content.length);
-      console.log(`Upload block blob ${blobName} successfully`, uploadBlobResponse.requestId);
+      console.log(`Upload block blob ${sampleFpsData.blobName} successfully`, uploadBlobResponse.requestId);
     } else {
       console.log("Blob already exists")
     }
