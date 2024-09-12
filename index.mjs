@@ -4,25 +4,28 @@ import { BlobServiceClient} from "@azure/storage-blob"
 const account = "salppcdevtede2cz6plihq";
 const defaultAzureCredential = new DefaultAzureCredential();
 
-// https://salppcdevtede2cz6plihq.blob.core.windows.net
-
 const blobServiceClient = new BlobServiceClient(
   `https://${account}.blob.core.windows.net`,
   defaultAzureCredential
 );
 
-const containerName = "testcontainer";
-const blobName = "hello.json";
-const content = JSON.stringify({foo: 'bar', baz: 42})
+const sampleFpsData = {
+  containerName: 'gamefpsdata',
+  blobName: '9NTM9HXNLSZX.json',
+  content: JSON.stringify({"fps30":4,"fps60":4}),
+  sampleUrl: 'https://gaminglppc.blob.core.windows.net/gamefpsdata/9NTM9HXNLSZX.json'
+}
+
+
 
 async function main() {
-    const containerClient = blobServiceClient.getContainerClient(containerName);
+    const containerClient = blobServiceClient.getContainerClient(sampleFpsData.containerName);
     await containerClient.createIfNotExists();
 
-    const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+    const blockBlobClient = containerClient.getBlockBlobClient(sampleFpsData.blobName);
     const blobExists = await blockBlobClient.exists();
     if(!blobExists) {
-      const uploadBlobResponse = await blockBlobClient.upload(content, content.length);
+      const uploadBlobResponse = await blockBlobClient.upload(sampleFpsData.content, sampleFpsData.content.length);
       console.log(`Upload block blob ${blobName} successfully`, uploadBlobResponse.requestId);
     } else {
       console.log("Blob already exists")
