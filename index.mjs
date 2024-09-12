@@ -19,14 +19,15 @@ const sampleFpsData = {
 
 
 async function main() {
-    const containerClient = blobServiceClient.getContainerClient(sampleFpsData.containerName);
+    const { containerName, blobName, content } = sampleFpsData;
+    const containerClient = blobServiceClient.getContainerClient(containerName);
     await containerClient.createIfNotExists();
 
-    const blockBlobClient = containerClient.getBlockBlobClient(sampleFpsData.blobName);
+    const blockBlobClient = containerClient.getBlockBlobClient(blobName);
     const blobExists = await blockBlobClient.exists();
     if(!blobExists) {
-      const uploadBlobResponse = await blockBlobClient.upload(sampleFpsData.content, sampleFpsData.content.length);
-      console.log(`Upload block blob ${sampleFpsData.blobName} successfully`, uploadBlobResponse.requestId);
+      const uploadBlobResponse = await blockBlobClient.upload(content, content.length);
+      console.log(`Upload block blob ${blobName} successfully`, uploadBlobResponse.requestId);
     } else {
       console.log("Blob already exists")
     }
